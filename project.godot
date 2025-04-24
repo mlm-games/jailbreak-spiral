@@ -11,5 +11,23 @@ config_version=5
 [application]
 
 config/name="JailBreak-Looper"
+run/main_scene="uid://bodvqqfyfqo7u"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+SettingsData="*res://addons/basic_settings_menu/settings_data.gd"
+Transitions="*res://addons/transitions/transitions.tscn"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/basic_settings_menu/plugin.cfg")
+
+[gui]
+
+theme/custom="uid://7lnnd7l2rb6j"
+
+[rendering]
+
+environment/defaults/default_clear_color=Color(0.0708674, 0.197818, 0.183339, 1)

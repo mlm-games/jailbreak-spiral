@@ -1,0 +1,82 @@
+class_name HealthComponent extends Node
+
+signal entity_died
+signal taking_damage
+signal health_changed(new_health: float)
+
+var max_health: float 
+var current_health: float = max_health
+var dying: bool = false
+var invincible: bool = false
+var prev_health := max_health
+
+enum HealthModificationType {
+	HEAL,
+	RAW_DAMAGE,
+	STATUS_EFFECT_DAMAGE,
+}
+
+@onready var parent : Node2D = get_parent()
+
+func _ready() -> void:
+	current_health = max_health
+	health_changed.emit(current_health)
+
+func damage(attack: Attack) -> void:
+	if not invincible:
+		var final_damage : float = attack.attack_damage
+		current_health -= final_damage
+		taking_damage.emit()
+		health_changed.emit(current_health)
+		check_health()
+
+func heal_or_damage(amount: float, type: HealthModificationType = HealthModificationType.RAW_DAMAGE) -> void:
+	if amount > 0 and type == HealthModificationType.HEAL:
+		#TODO: add heal particle effects
+		var tween : Tween = create_tween().set_ease(Tween.EASE_OUT_IN)
+		var color_backup : Color = parent.modulate
+		tween.tween_property(parent, "modulate", Color.LIGHT_GREEN, 0.1)
+		tween.tween_property(parent, "modulate", color_backup, 0.1)
+	
+	current_health = clampf(current_health + amount, 0, max_health)
+	health_changed.emit(current_health)
+
+func dot(attack: Attack) -> void:
+	if not invincible:
+		current_health -= attack.attack_damage
+			
+		for i in int(attack.dot_duration):
+			await get_tree().create_timer(1).timeout
+			current_health -= attack.damage_over_time
+			taking_damage.emit()
+			health_changed.emit(current_health)
+			check_health()
+
+
+func is_alive() -> bool:
+	return current_health > 0
+
+#func is_taking_damage(delta) -> bool:
+	#var is_damaged = current_health < prev_health
+	#prev_health = current_health
+	#return is_damaged
+
+
+func check_health() -> void:
+	if not is_alive():
+		entity_died.emit()
+
+func disable_for_secs(secs: float) -> void:
+	invincible = true
+	var parent_sprite : Sprite2D = get_node("../Sprite2D")
+	parent_sprite.material = ShaderMaterial.new()
+	await get_tree().create_timer(secs).timeout
+	invincible = false
+	parent_sprite.material = null
+	
+
+#func display_floating_dmg_numbers(dmg_val: float) -> void:
+	#var nos_instance := ScreenEffects.FLOATING_DAMAGE_TEXT.instantiate()
+	#nos_instance.global_position = parent.global_position
+	#GameState.world.add_child(nos_instance)
+	#nos_instance.display(dmg_val)

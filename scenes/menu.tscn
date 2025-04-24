@@ -1,0 +1,96 @@
+[gd_scene load_steps=4 format=3 uid="uid://bodvqqfyfqo7u"]
+
+[ext_resource type="Script" uid="uid://dy2lf0syvpebx" path="res://scenes/menu.gd" id="1_yqeox"]
+[ext_resource type="Texture2D" uid="uid://gv2s3o2b8b1r" path="res://assets/my-assets/title-back.svg" id="2_vjb58"]
+[ext_resource type="Script" uid="uid://cmo5qw3rubish" path="res://scenes/anim_button.gd" id="3_con2f"]
+
+[node name="Menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_yqeox")
+metadata/_edit_use_anchors_ = true
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+visible = false
+position = Vector2(689, 231)
+color = Color(0.281187, 0.281187, 0.281187, 1)
+polygon = PackedVector2Array(-200, -16, -112, -40, -24, -16, 8, 40, -112, 40, -240, 40)
+uv = PackedVector2Array(-235, -46, -108, -11, 7, -45, 7, 41, -104, 18, -239, 44)
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 298.0
+offset_top = -45.0
+offset_right = 859.0
+offset_bottom = 516.0
+texture = ExtResource("2_vjb58")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -58.0
+offset_top = -100.0
+offset_right = 58.0
+offset_bottom = -50.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(0.5, 0.5)
+text = "Jailbreak Spiral"
+fit_content = true
+autowrap_mode = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -127.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="StartButton" type="Button" parent="PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+text = "START"
+script = ExtResource("3_con2f")
+
+[node name="SettingsButton" type="Button" parent="PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+text = "SETTINGS"
+script = ExtResource("3_con2f")
+
+[node name="CreditsButton" type="Button" parent="PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+text = "CREDITS"
+script = ExtResource("3_con2f")
+
+[node name="ExitButton" type="Button" parent="PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+text = "EXIT"
+script = ExtResource("3_con2f")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]

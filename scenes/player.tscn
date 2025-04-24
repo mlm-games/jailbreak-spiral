@@ -1,0 +1,27 @@
+[gd_scene load_steps=6 format=3 uid="uid://c1re6liy1a7g8"]
+
+[ext_resource type="Script" uid="uid://ce6c8i3jpcxav" path="res://scenes/player.gd" id="1_3vyb7"]
+[ext_resource type="Script" uid="uid://cxlcyoby6lw7s" path="res://scenes/components/hitbox_component.gd" id="2_dqkch"]
+[ext_resource type="Script" uid="uid://0ekbck30lfms" path="res://scenes/components/health_component.gd" id="3_qlg0r"]
+[ext_resource type="Texture2D" uid="uid://j63ks3i4w8b1" path="res://icon.svg" id="4_tuyoq"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dqkch"]
+radius = 58.0
+height = 116.0
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_3vyb7")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("4_tuyoq")
+
+[node name="HitboxComponent" type="Area2D" parent="."]
+script = ExtResource("2_dqkch")
+metadata/_custom_type_script = "uid://cxlcyoby6lw7s"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
+shape = SubResource("CapsuleShape2D_dqkch")
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("3_qlg0r")
+metadata/_custom_type_script = "uid://0ekbck30lfms"
