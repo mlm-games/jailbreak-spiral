@@ -22,7 +22,7 @@ Transitions="*res://addons/transitions/transitions.tscn"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/basic_settings_menu/plugin.cfg")
+enabled=PackedStringArray("res://addons/basic_settings_menu/plugin.cfg", "res://addons/godot_state_charts/plugin.cfg", "res://addons/ridiculous_coding/plugin.cfg")
 
 [gui]
 

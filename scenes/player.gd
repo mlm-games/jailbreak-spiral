@@ -1,6 +1,6 @@
 class_name Player extends CharacterBody2D
 
-@onready var health_component: HealthComponent = %HealthComponent
+@onready var health_component: HealthComponent = get_node("HealthComponent")
 
 var speed = 250
 

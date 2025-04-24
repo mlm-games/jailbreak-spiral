@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=4 uid="uid://dwy6hkk3pn1wb"]
+[gd_scene load_steps=7 format=4 uid="uid://dwy6hkk3pn1wb"]
 
 [ext_resource type="Texture2D" uid="uid://srbysu010msu" path="res://assets/my-assets/ground-tileset.svg" id="1_nnsk1"]
 [ext_resource type="Script" uid="uid://bhfgijkgofovp" path="res://scenes/world.gd" id="1_rwgxs"]
 [ext_resource type="PackedScene" uid="uid://c1re6liy1a7g8" path="res://scenes/player.tscn" id="3_4wyf3"]
+[ext_resource type="PackedScene" uid="uid://cw50ala4uisq4" path="res://scenes/enemies/basic_enemy.tscn" id="4_k0juu"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rwgxs"]
 texture = ExtResource("1_nnsk1")
@@ -108,3 +109,22 @@ tile_map_data = PackedByteArray("AAACAAIAAAANAAAAAAACAAMAAAANAAAAAAADAAMAAAANAAA
 tile_set = SubResource("TileSet_4wyf3")
 
 [node name="Player" parent="." instance=ExtResource("3_4wyf3")]
+unique_name_in_owner = true
+position = Vector2(564, 543)
+
+[node name="LevelTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 30.0
+one_shot = true
+autostart = true
+
+[node name="TimeLabel" type="Label" parent="."]
+offset_right = 1154.0
+offset_bottom = 95.0
+theme_override_font_sizes/font_size = 32
+text = "Round ends in: 0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BasicEnemy" parent="." instance=ExtResource("4_k0juu")]
+position = Vector2(564, 543)

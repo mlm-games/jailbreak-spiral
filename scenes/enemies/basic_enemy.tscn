@@ -1,0 +1,120 @@
+[gd_scene load_steps=15 format=3 uid="uid://cw50ala4uisq4"]
+
+[ext_resource type="Texture2D" uid="uid://j63ks3i4w8b1" path="res://icon.svg" id="1_ibjif"]
+[ext_resource type="Script" uid="uid://cqhv270wyt5ek" path="res://scenes/enemies/basic_enemy.gd" id="1_yo4tp"]
+[ext_resource type="Script" uid="uid://cxlcyoby6lw7s" path="res://scenes/components/hitbox_component.gd" id="2_4mpuu"]
+[ext_resource type="Script" uid="uid://0ekbck30lfms" path="res://scenes/components/health_component.gd" id="3_wsh5r"]
+[ext_resource type="Script" uid="uid://dm8rpsi4ixuln" path="res://addons/godot_state_charts/state_chart.gd" id="5_pksqs"]
+[ext_resource type="Script" uid="uid://b8vbehtpfbst4" path="res://addons/godot_state_charts/compound_state.gd" id="6_mgm4g"]
+[ext_resource type="Script" uid="uid://bt4tus6rc0jv" path="res://addons/godot_state_charts/atomic_state.gd" id="7_qoibk"]
+[ext_resource type="Script" uid="uid://bsllyj5yckl" path="res://addons/godot_state_charts/transition.gd" id="8_ox54m"]
+[ext_resource type="PackedScene" uid="uid://bcwkugn6v3oy7" path="res://addons/godot_state_charts/utilities/state_chart_debugger.tscn" id="9_pksqs"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_3ld4s"]
+radius = 58.0
+height = 116.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_yo4tp"]
+radius = 164.639
+
+[sub_resource type="Animation" id="Animation_pksqs"]
+resource_name = "punch"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.166667, 0.466667, 0.933333),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(0.96, 0.96), Vector2(1.085, 1.085), Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_mgm4g"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qoibk"]
+_data = {
+&"RESET": SubResource("Animation_mgm4g"),
+&"punch": SubResource("Animation_pksqs")
+}
+
+[node name="BasicEnemy" type="CharacterBody2D"]
+script = ExtResource("1_yo4tp")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_ibjif")
+
+[node name="HitboxComponent" type="Area2D" parent="."]
+script = ExtResource("2_4mpuu")
+metadata/_custom_type_script = "uid://cxlcyoby6lw7s"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
+shape = SubResource("CapsuleShape2D_3ld4s")
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("3_wsh5r")
+metadata/_custom_type_script = "uid://0ekbck30lfms"
+
+[node name="StateChart" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("5_pksqs")
+metadata/_custom_type_script = "uid://dm8rpsi4ixuln"
+
+[node name="CompoundState" type="Node" parent="StateChart"]
+script = ExtResource("6_mgm4g")
+initial_state = NodePath("GetInRange")
+
+[node name="GetInRange" type="Node" parent="StateChart/CompoundState"]
+script = ExtResource("7_qoibk")
+
+[node name="Transition" type="Node" parent="StateChart/CompoundState/GetInRange"]
+script = ExtResource("8_ox54m")
+to = NodePath("../../Attack")
+event = &"player_in_range"
+delay_in_seconds = "0.0"
+
+[node name="Attack" type="Node" parent="StateChart/CompoundState"]
+script = ExtResource("7_qoibk")
+
+[node name="Transition" type="Node" parent="StateChart/CompoundState/Attack"]
+script = ExtResource("8_ox54m")
+to = NodePath("../../GetInRange")
+event = &"player_left_range"
+delay_in_seconds = "0.0"
+
+[node name="DetectionArea2D" type="Area2D" parent="."]
+unique_name_in_owner = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea2D"]
+shape = SubResource("CircleShape2D_yo4tp")
+
+[node name="StateChartDebugger" parent="." instance=ExtResource("9_pksqs")]
+offset_left = -432.0
+offset_top = -558.0
+offset_right = 439.0
+offset_bottom = -81.0
+initial_node_to_watch = NodePath("../StateChart")
+
+[node name="AttackAnim" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+&"": SubResource("AnimationLibrary_qoibk")
+}
+
+[connection signal="state_physics_processing" from="StateChart/CompoundState/GetInRange" to="." method="_on_get_in_range_state_physics_processing"]
+[connection signal="state_processing" from="StateChart/CompoundState/Attack" to="." method="_on_attack_state_processing"]
