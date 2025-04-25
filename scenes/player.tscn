@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://c1re6liy1a7g8"]
+[gd_scene load_steps=16 format=3 uid="uid://c1re6liy1a7g8"]
 
 [ext_resource type="Script" uid="uid://ce6c8i3jpcxav" path="res://scenes/player.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://cxlcyoby6lw7s" path="res://scenes/components/hitbox_component.gd" id="2_dqkch"]
@@ -9,10 +9,84 @@
 [ext_resource type="Script" uid="uid://bvtvsfh8ro6xj" path="res://addons/godot_state_charts/parallel_state.gd" id="7_y4r1p"]
 [ext_resource type="Script" uid="uid://bt4tus6rc0jv" path="res://addons/godot_state_charts/atomic_state.gd" id="8_d2wvv"]
 [ext_resource type="Script" uid="uid://bsllyj5yckl" path="res://addons/godot_state_charts/transition.gd" id="9_ur7pv"]
+[ext_resource type="PackedScene" uid="uid://bn148nutj1iq3" path="res://scenes/Hand.tscn" id="10_y4r1p"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dqkch"]
 radius = 58.0
 height = 116.0
+
+[sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_ur7pv"]
+
+[sub_resource type="Animation" id="Animation_d2wvv"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("%StateChart/../Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_y4r1p"]
+resource_name = "attack"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("%StateChart/../Sprite2D:scale")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(0.9, 0.9), Vector2(1.1, 1.1), Vector2(1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../Hand:position")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.266667, 0.666667, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(40, 0), Vector2(0, 10), Vector2(0, 0)]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = false
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.666667, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"values": [{
+"args": [Vector2(0, 0)],
+"method": &"set_hand_position_rotated"
+}, {
+"args": [Vector2(40, 0)],
+"method": &"set_hand_position_rotated"
+}, {
+"args": [Vector2(0, 10)],
+"method": &"set_hand_position_rotated"
+}, {
+"args": [Vector2(0, 0)],
+"method": &"set_hand_position_rotated"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_3v2ag"]
+_data = {
+&"RESET": SubResource("Animation_d2wvv"),
+&"attack": SubResource("Animation_y4r1p")
+}
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_3vyb7")
@@ -32,31 +106,13 @@ script = ExtResource("3_qlg0r")
 metadata/_custom_type_script = "uid://0ekbck30lfms"
 
 [node name="StateChart" type="Node" parent="."]
+unique_name_in_owner = true
 script = ExtResource("5_smehm")
 metadata/_custom_type_script = "uid://dm8rpsi4ixuln"
 
 [node name="CompoundState" type="Node" parent="StateChart"]
 script = ExtResource("6_ur7pv")
 initial_state = NodePath("ParallelState")
-
-[node name="ParallelState" type="Node" parent="StateChart/CompoundState"]
-script = ExtResource("7_y4r1p")
-
-[node name="Hurt" type="Node" parent="StateChart/CompoundState/ParallelState"]
-script = ExtResource("8_d2wvv")
-
-[node name="Transition" type="Node" parent="StateChart/CompoundState/ParallelState/Hurt"]
-script = ExtResource("9_ur7pv")
-event = &"hurt_end"
-delay_in_seconds = "0.0"
-
-[node name="Attack" type="Node" parent="StateChart/CompoundState/ParallelState"]
-script = ExtResource("8_d2wvv")
-
-[node name="Transition" type="Node" parent="StateChart/CompoundState/ParallelState/Attack"]
-script = ExtResource("9_ur7pv")
-event = &"attack_ended"
-delay_in_seconds = "0.0"
 
 [node name="Default" type="Node" parent="StateChart/CompoundState"]
 script = ExtResource("8_d2wvv")
@@ -72,3 +128,44 @@ script = ExtResource("9_ur7pv")
 to = NodePath("../../ParallelState/Attack")
 event = &"attack"
 delay_in_seconds = "0.0"
+
+[node name="ParallelState" type="Node" parent="StateChart/CompoundState"]
+script = ExtResource("7_y4r1p")
+
+[node name="Hurt" type="Node" parent="StateChart/CompoundState/ParallelState"]
+script = ExtResource("8_d2wvv")
+
+[node name="Transition" type="Node" parent="StateChart/CompoundState/ParallelState/Hurt"]
+script = ExtResource("9_ur7pv")
+to = NodePath("../../../Default")
+event = &"hurt_end"
+delay_in_seconds = "0.0"
+
+[node name="Attack" type="Node" parent="StateChart/CompoundState/ParallelState"]
+script = ExtResource("8_d2wvv")
+
+[node name="Transition" type="Node" parent="StateChart/CompoundState/ParallelState/Attack"]
+script = ExtResource("9_ur7pv")
+to = NodePath("../../../Default")
+event = &"attack_ended"
+delay_in_seconds = "0.0"
+
+[node name="Move" type="Node" parent="StateChart/CompoundState"]
+script = ExtResource("8_d2wvv")
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+root_node = NodePath(".")
+tree_root = SubResource("AnimationNodeBlendSpace1D_ur7pv")
+anim_player = NodePath("AnimationPlayer")
+parameters/blend_position = 0.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="AnimationTree"]
+unique_name_in_owner = true
+libraries = {
+&"": SubResource("AnimationLibrary_3v2ag")
+}
+
+[node name="Hand" parent="." instance=ExtResource("10_y4r1p")]
+unique_name_in_owner = true
+
+[connection signal="state_entered" from="StateChart/CompoundState/ParallelState/Attack" to="." method="_on_attack_state_entered"]

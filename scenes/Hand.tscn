@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://bn148nutj1iq3"]
+
+[ext_resource type="Script" uid="uid://cieoa0q2fi6br" path="res://scenes/hand.gd" id="1_co447"]
+[ext_resource type="Texture2D" uid="uid://j63ks3i4w8b1" path="res://icon.svg" id="1_vchyo"]
+[ext_resource type="Script" uid="uid://cxlcyoby6lw7s" path="res://scenes/components/hitbox_component.gd" id="3_oym42"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_co447"]
+size = Vector2(63, 25)
+
+[node name="Hand" type="RigidBody2D"]
+gravity_scale = 0.0
+script = ExtResource("1_co447")
+
+[node name="Marker2D" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, 110)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Marker2D"]
+position = Vector2(1, -0.500001)
+scale = Vector2(0.484375, 0.210938)
+texture = ExtResource("1_vchyo")
+
+[node name="HitboxComponent" type="Area2D" parent="Marker2D"]
+script = ExtResource("3_oym42")
+metadata/_custom_type_script = "uid://cxlcyoby6lw7s"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Marker2D/HitboxComponent"]
+shape = SubResource("RectangleShape2D_co447")
