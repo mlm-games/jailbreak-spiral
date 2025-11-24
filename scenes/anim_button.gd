@@ -1,9 +1,7 @@
 @tool
 class_name AnimButton extends Button
 
-#@onready var particles = $MovementParticles2D
-#@onready var label: Label = $Label
-var audio_stream_player: AudioStreamPlayer = AudioStreamPlayer.new()
+var click_stream_player: AudioStreamPlayer = AudioStreamPlayer.new()
 static var hover_sound_player: AudioStreamPlayer = AudioStreamPlayer.new()
 
 @export var hover_audio: AudioStream:
@@ -11,8 +9,8 @@ static var hover_sound_player: AudioStreamPlayer = AudioStreamPlayer.new()
 	set(val): hover_sound_player.stream  = val
 
 @export var click_audio: AudioStream:
-	get: return hover_sound_player.stream 
-	set(val): hover_sound_player.stream  = val
+	get: return click_stream_player.stream 
+	set(val): click_stream_player.stream  = val
 
 var tween: Tween
 
@@ -28,45 +26,20 @@ func _ready() -> void:
 	
 	pivot_offset = size/2
 	
-	audio_stream_player.bus = "Sfx"
-	get_tree().get_root().add_child.call_deferred(audio_stream_player)
+	click_stream_player.bus = "Sfx"
+	get_tree().get_root().add_child.call_deferred(click_stream_player)
 	
-	#Label stuff
-	#_setup_text_animation()
-
-#func _setup_text_animation():
-	#label.material = ShaderMaterial.new()
-	#label.material.shader = preload("res://scenes/UI/misc/anim_text.gdshader")
-
 
 func _on_mouse_entered() -> void:
 	pivot_offset = size/2
-	#particles.emitting = true
 	reset_tween()
 	tween.tween_property(self, "scale", Vector2(1.075, 1.075), 0.15).set_trans(Tween.TRANS_CUBIC)
 	if hover_audio: hover_sound_player.play()
-	# smallish glow effect
-	#var style = get_theme_stylebox("normal").duplicate()
-	#style.shadow_size = 8
-	#add_theme_stylebox_override("normal", style)
-	
-	## Label stuff
-	
-	#tween = create_tween()
-	#tween.tween_method(_update_text_effect, 0.0, 1.0, 0.3)
 
 func _on_mouse_exited() -> void:
 	pivot_offset = size/2
-	#particles.emitting = false
 	reset_tween()
 	tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.15).set_trans(Tween.TRANS_CUBIC)
-	
-	# Reset glow
-	#add_theme_stylebox_override("normal", null)
-	
-	## label 
-	#tween = create_tween()
-	#tween.tween_method(_update_text_effect, 1.0, 0.0, 0.3)
 
 func _on_button_down() -> void:
 	pivot_offset = size/2
@@ -78,15 +51,11 @@ func _on_button_up() -> void:
 	reset_tween()
 	tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.1).set_trans(Tween.TRANS_CUBIC)
 
-#func _update_text_effect(value: float):
-	#label.material.set_shader_parameter("effect_value", value)
-
 
 func _on_pressed() -> void:
 	if click_audio: 
-		audio_stream_player.stream = click_audio
-	# audio_stream_player.pitch_scale = 1.2
-		audio_stream_player.play()
+		click_stream_player.stream = click_audio
+		click_stream_player.play()
 
 
 #FIXME: Doesnt work due to the timers not being syncronised properly, hence looking bad.
@@ -94,9 +63,9 @@ func _on_pressed() -> void:
 	#_on_mouse_entered()
 
 func _exit_tree() -> void:
-	#await audio_stream_player.finished
-	#audio_stream_player.volume_db = -1000
-	audio_stream_player.queue_free()
+	#await click_stream_player.finished
+	#click_stream_player.volume_db = -1000
+	click_stream_player.queue_free()
 
 func reset_tween() -> void:
 	if tween:

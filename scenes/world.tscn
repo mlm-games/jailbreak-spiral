@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=4 uid="uid://dwy6hkk3pn1wb"]
+[gd_scene load_steps=8 format=4 uid="uid://dwy6hkk3pn1wb"]
 
 [ext_resource type="Texture2D" uid="uid://srbysu010msu" path="res://assets/my-assets/ground-tileset.svg" id="1_nnsk1"]
 [ext_resource type="Script" uid="uid://bhfgijkgofovp" path="res://scenes/world.gd" id="1_rwgxs"]
 [ext_resource type="PackedScene" uid="uid://c1re6liy1a7g8" path="res://scenes/player.tscn" id="3_4wyf3"]
 [ext_resource type="PackedScene" uid="uid://cw50ala4uisq4" path="res://scenes/enemies/basic_enemy.tscn" id="4_k0juu"]
+[ext_resource type="PackedScene" uid="uid://bcwkugn6v3oy7" path="res://addons/godot_state_charts/utilities/state_chart_debugger.tscn" id="5_71j4m"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rwgxs"]
 texture = ExtResource("1_nnsk1")
@@ -102,6 +103,7 @@ tile_size = Vector2i(64, 64)
 sources/0 = SubResource("TileSetAtlasSource_rwgxs")
 
 [node name="World" type="Node2D"]
+y_sort_enabled = true
 script = ExtResource("1_rwgxs")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
@@ -122,9 +124,18 @@ autostart = true
 offset_right = 1154.0
 offset_bottom = 95.0
 theme_override_font_sizes/font_size = 32
-text = "Round ends in: 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="BasicEnemy" parent="." instance=ExtResource("4_k0juu")]
-position = Vector2(564, 543)
+position = Vector2(564, 240)
+
+[node name="StateChartDebugger" parent="BasicEnemy" instance=ExtResource("5_71j4m")]
+top_level = true
+z_index = -1
+offset_left = 130.0
+offset_top = 47.0
+offset_right = -88.0
+offset_bottom = -41.0
+mouse_filter = 2
+initial_node_to_watch = NodePath("../StateChart")

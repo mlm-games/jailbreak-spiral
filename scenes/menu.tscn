@@ -26,29 +26,27 @@ uv = PackedVector2Array(-235, -46, -108, -11, 7, -45, 7, 41, -104, 18, -239, 44)
 [node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 0
 offset_left = 298.0
-offset_top = -45.0
-offset_right = 859.0
-offset_bottom = 516.0
+offset_top = -179.0
+offset_right = 863.0
+offset_bottom = 386.0
+scale = Vector2(4.775, 4.775)
+pivot_offset = Vector2(280, 280)
 texture = ExtResource("2_vjb58")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="."]
-custom_minimum_size = Vector2(50, 50)
+[node name="TitleLabel" type="RichTextLabel" parent="."]
 layout_mode = 1
-anchors_preset = 8
+anchors_preset = 5
 anchor_left = 0.5
-anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -58.0
-offset_top = -100.0
-offset_right = 58.0
-offset_bottom = -50.0
+offset_left = -529.5
+offset_right = 529.5
+offset_bottom = 285.0
 grow_horizontal = 2
-grow_vertical = 2
-pivot_offset = Vector2(0.5, 0.5)
-text = "Jailbreak Spiral"
-fit_content = true
-autowrap_mode = 0
+theme_override_font_sizes/normal_font_size = 96
+bbcode_enabled = true
+text = "[wave amp=50][outline_size=35][color=blue][outline_color=green]Jailbreak[/outline_color][/color]  [color=yellow][outline_color=violet]Spiral[/outline_color][/color]"
+horizontal_alignment = 1
+vertical_alignment = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 1

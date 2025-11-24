@@ -10,8 +10,20 @@ var attack_offset_val = Vector2(40, 10)
 
 var attack_tween: Tween
 
+@onready var health_bar: ProgressBar = %HealthBar
+
 func _ready() -> void:
-	pass
+	health_component.health_changed.connect(_on_player_health_change.bind())
+	
+	health_component.max_health = GameStats.get_stat(GameStats.Stats.PLAYER_MAX_HEALTH)
+	health_bar.max_value = health_component.max_health
+	health_bar.value = health_component.max_health
+	
+	%Hand.set_collision_mask_value(2, true)
+
+	
+func _on_player_health_change(new_health: float) -> void:
+	health_bar.value = new_health
 
 func _physics_process(_delta: float) -> void:
 	var direction : Vector2 = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
@@ -28,6 +40,8 @@ func _physics_process(_delta: float) -> void:
 		
 	
 	move_and_slide()
+	
+	%Hand.look_at_position = get_global_mouse_position()
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("attack") and event.is_pressed():
